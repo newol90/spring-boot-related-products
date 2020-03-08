@@ -15,6 +15,7 @@ import com.app.api.RelatedProductFilterDto;
 import com.app.api.error.MyException;
 import com.app.model.entity.Product;
 import com.app.model.entity.ProductProduct;
+import com.app.model.entity.ProductProductPK;
 import com.app.model.mapper.ProductMapper;
 import com.app.repository.ProductProductRepository;
 import com.app.repository.ProductRepository;
@@ -50,21 +51,33 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDto> getRelatedProducts(RelatedProductFilterDto filter) {
+	public List<ProductDto> getRelatedProducts(RelatedProductFilterDto filter) throws MyException {
 
 		Optional<Product> product = this.productRepository.findByNameAndClient_idClient(filter.getProductName(),
 				filter.getIdClient());
 		if (product.isPresent()) {
 			return this.mapper.productsToProductDtos(product.get().getRelatedProducts());
+		} else {
+			throw new MyException(String.format("Product with name %s does not exist for customer %s",
+					filter.getProductName(), filter.getIdClient()));
 		}
-		// TODO throw new exception..
-		return null;
 	}
 
 	@Override
 	public void addRelatedProduct(NewRelatedProductDto dto) throws MyException {
-		ProductProduct related1 = new ProductProduct(dto.getIdProduct(), dto.getIdRelatedProduct());
-		ProductProduct related2 = new ProductProduct(dto.getIdRelatedProduct(), dto.getIdProduct());
+
+		ProductProduct related1 = new ProductProduct();
+		ProductProductPK productProductPK1 = new ProductProductPK();
+		productProductPK1.setIdProduct(dto.getIdProduct());
+		productProductPK1.setIdRelatedProduct(dto.getIdRelatedProduct());
+		related1.setId(productProductPK1);
+
+		ProductProduct related2 = new ProductProduct();
+		ProductProductPK productProductPK2 = new ProductProductPK();
+		productProductPK2.setIdProduct(dto.getIdRelatedProduct());
+		productProductPK2.setIdRelatedProduct(dto.getIdProduct());
+		related2.setId(productProductPK2);
+
 		try {
 			this.productProductrepository.saveAll(Arrays.asList(related1, related2));
 		} catch (Exception e) {

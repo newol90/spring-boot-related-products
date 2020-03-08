@@ -12,9 +12,9 @@ public class NewRelatedProductDto implements Serializable {
 	private static final long serialVersionUID = 3490741945365504223L;
 
 	@NotNull
-	private Long idProduct;
+	private Integer idProduct;
 
 	@NotNull
-	private Long idRelatedProduct;
+	private Integer idRelatedProduct;
 
 }

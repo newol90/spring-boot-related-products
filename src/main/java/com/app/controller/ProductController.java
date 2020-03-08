@@ -2,6 +2,8 @@ package com.app.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +27,22 @@ public class ProductController extends BaseController {
 	private ProductService productService;
 
 	@PostMapping("/add-product")
-	public ResponseEntity<ProductDto> addProduct(final NewProductDto dto) throws MyException {
+	public ResponseEntity<ProductDto> addProduct(@Valid final NewProductDto dto) throws MyException {
 
 		ProductDto product = this.productService.addProduct(dto);
 		return new ResponseEntity<>(product, HttpStatus.OK);
 	}
 
 	@GetMapping("/get-related-products")
-	public ResponseEntity<List<ProductDto>> getRelatedProducts(final RelatedProductFilterDto filter) {
+	public ResponseEntity<List<ProductDto>> getRelatedProducts(@Valid final RelatedProductFilterDto filter)
+			throws MyException {
 
 		List<ProductDto> relatedProducts = this.productService.getRelatedProducts(filter);
 		return new ResponseEntity<>(relatedProducts, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/add-related-product")
-	public ResponseEntity<String> addRelatedProduct(final NewRelatedProductDto dto) throws MyException {
+	public ResponseEntity<String> addRelatedProduct(@Valid final NewRelatedProductDto dto) throws MyException {
 
 		this.productService.addRelatedProduct(dto);
 		return new ResponseEntity<>("Success related products", HttpStatus.OK);

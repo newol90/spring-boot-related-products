@@ -12,7 +12,7 @@ public interface ProductService {
 
 	ProductDto addProduct(NewProductDto dto) throws MyException;
 
-	List<ProductDto> getRelatedProducts(RelatedProductFilterDto filter);
+	List<ProductDto> getRelatedProducts(RelatedProductFilterDto filter) throws MyException;
 
 	void addRelatedProduct(NewRelatedProductDto dto) throws MyException;
 

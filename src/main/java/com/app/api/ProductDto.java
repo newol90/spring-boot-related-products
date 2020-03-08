@@ -10,7 +10,7 @@ public class ProductDto implements Serializable {
 
 	private static final long serialVersionUID = -854087951612427929L;
 
-	private Long idProduct;
+	private Integer idProduct;
 
 	private String name;
 
