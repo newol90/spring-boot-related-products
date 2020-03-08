@@ -28,7 +28,11 @@ public class Product {
 	private Client client;
 
 	@ManyToMany
-	@JoinTable(name = "product_product", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_related_product"))
+	@JoinTable(
+		name = "product_product",
+		joinColumns = @JoinColumn(name = "id_product"),
+		inverseJoinColumns = @JoinColumn(name = "id_related_product")
+	)
 	private List<Product> relatedProducts;
 
 }

@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 	private ProductProductRepository productProductrepository;
 
 	@Autowired
-	private ProductMapper mapper;
+	private ProductMapper productMapper;
 
 	@Override
 	public ProductDto addProduct(NewProductDto dto) throws MyException {
@@ -41,13 +41,13 @@ public class ProductServiceImpl implements ProductService {
 		productDto.setName(dto.getName());
 		productDto.setClient(new ClientDto());
 		productDto.getClient().setIdClient(dto.getIdClient());
-		Product product = this.mapper.productDtoToProduct(productDto);
+		Product product = this.productMapper.productDtoToProduct(productDto);
 		try {
 			product = this.productRepository.save(product);
+			return this.productMapper.productToProductDto(product);
 		} catch (Exception e) {
 			throw new MyException(ExceptionUtils.getMessageCause(e));
 		}
-		return this.mapper.productToProductDto(product);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 		Optional<Product> product = this.productRepository.findByNameAndClient_idClient(filter.getProductName(),
 				filter.getIdClient());
 		if (product.isPresent()) {
-			return this.mapper.productsToProductDtos(product.get().getRelatedProducts());
+			return this.productMapper.productsToProductDtos(product.get().getRelatedProducts());
 		} else {
 			throw new MyException(String.format("Product with name %s does not exist for customer %s",
 					filter.getProductName(), filter.getIdClient()));
@@ -66,20 +66,20 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void addRelatedProduct(NewRelatedProductDto dto) throws MyException {
 
-		ProductProduct related1 = new ProductProduct();
+		ProductProduct product = new ProductProduct();
 		ProductProductPK productProductPK1 = new ProductProductPK();
 		productProductPK1.setIdProduct(dto.getIdProduct());
 		productProductPK1.setIdRelatedProduct(dto.getIdRelatedProduct());
-		related1.setId(productProductPK1);
+		product.setId(productProductPK1);
 
-		ProductProduct related2 = new ProductProduct();
+		ProductProduct relatedProduct = new ProductProduct();
 		ProductProductPK productProductPK2 = new ProductProductPK();
 		productProductPK2.setIdProduct(dto.getIdRelatedProduct());
 		productProductPK2.setIdRelatedProduct(dto.getIdProduct());
-		related2.setId(productProductPK2);
+		relatedProduct.setId(productProductPK2);
 
 		try {
-			this.productProductrepository.saveAll(Arrays.asList(related1, related2));
+			this.productProductrepository.saveAll(Arrays.asList(product, relatedProduct));
 		} catch (Exception e) {
 			throw new MyException(ExceptionUtils.getMessageCause(e));
 		}

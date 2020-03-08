@@ -10,7 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import com.app.config.AppConfiguration;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.app.controller", "com.app.model.mapper", "com.app.service.impl" })
+@ComponentScan(basePackages = {
+	"com.app.controller",
+	"com.app.model.mapper",
+	"com.app.service.impl"
+})
 @EntityScan(basePackages = "com.app.model.entity")
 @EnableJpaRepositories(basePackages = "com.app.repository")
 @Import(AppConfiguration.class)
